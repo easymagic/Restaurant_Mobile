@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+
+<link rel="import" href="inc_header.html" />
+    
+
+
+	<!-- <script type="text/javascript" src="js/libraries/jquery.js"></script> -->
+
+</head>
+<body>
+
+<style type="text/css">
+	.vspacing{
+		margin-bottom: 11px;
+	}
+</style>	
+
+<div class="col-xs-12">
+	
+	<div class="col-xs-12 vspacing" align="center">
+	
+	  <label>Waiter Assist (Select Table)</label>	
+   
+	</div>
+
+  
+   <div class="col-xs-12">
+
+   	 <div class="alert alert-info" id="status" style="display: none;"></div>
+   
+   </div>
+
+
+<span id="outlet"></span>
+
+
+
+<div id="template" style="display: none;">
+
+<!-- template start   -->
+
+  <div class="col-xs-12 vspacing">
+
+
+        <button  class="btn btn-success form-control clk" data-id="sync-tables">
+
+           Table[]
+
+        </button>
+
+
+  </div>
+
+
+<!-- template stop -->
+
+</div>
+	
+
+
+
+
+
+
+
+
+
+
+	<div class="col-xs-12 vspacing">
+		
+
+        <a href="dashboard.html" class="btn btn-default form-control" >Back</a>
+
+
+	</div>
+
+
+</div>
+
+<script type="text/javascript">
+	(function($){
+		$(function(){
+
+			
+ __action('is_not_logged');
+
+__action('load_table_assist',$('#outlet'));
+
+		});
+	})(jQuery);
+</script>
+</body>
+</html>

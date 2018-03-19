@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+  
+  <link rel="import" href="inc_header.html" />    
+
+	<!-- <script type="text/javascript" src="js/libraries/jquery.js"></script> -->
+
+</head>
+<body>
+
+<style type="text/css">
+	.vspacing{
+		margin-bottom: 11px;
+	}
+</style>	
+
+<div class="col-xs-12" style="padding: 0;">
+	
+	<div class="col-xs-12 vspacing" align="center">
+	
+   
+	</div>
+
+
+<div class="col-xs-12 r2-nav" style="position: fixed;margin-top: 0;z-index: 9000;background-color: rgba(0,0,0,0.2);padding: 11px;">
+
+    <label style="float: left;">Current Table (<span id="current_table"></span>)</label> 
+
+  <a href="table_orders.html" class="btn btn-primary" id="order-summary">Order</a>
+
+  <a href="dashboard.html" class="btn btn-primary" style="margin-left: 5px;">Back</a>
+
+</div>
+
+
+<div style="clear: both;margin-top: 40px;">&nbsp;</div>
+  
+   <div class="col-xs-12">
+
+   	 <div class="alert alert-info" id="status" style="display: none;"></div>
+   
+   </div>
+
+
+
+
+<span id="outlet" style="
+    margin-top: 12px;
+    display: inline-block;
+    width: 100%;
+">
+  
+</span>
+
+
+<!-- template start -->
+
+<div id="template-parent-item" style="display: none;">
+ <!-- start -->
+
+  <div class="col-xs-12 vspacing">
+
+
+        <button  class="btn btn-success form-control clk" data-id="sync-tables">
+          Sync Tables
+        </button>
+
+
+        <div class="col-xs-12" id="sub-items" style="display: none;">
+        </div>        
+
+
+  </div>
+
+  <!-- stop -->
+</div>
+
+<div id="template-child-item" style="display: none;">
+
+<!-- start -->
+
+  <div class="col-xs-12 vspacing">
+
+
+        <button  class="btn btn-primary form-control clk" data-id="sync-tables" style="margin-top: 5px;">
+          <span id="name"></span>
+          
+          <i class="fa fa-plus-circle"></i>
+
+        </button>
+
+
+
+  </div>
+
+
+<!-- stop -->
+  
+</div>
+
+<!-- template stop -->
+
+
+
+
+
+
+
+	<div class="col-xs-12 vspacing">
+		
+       <a href="table_select_order.html" class="btn btn-default form-control" >Back</a>
+
+	</div>
+
+
+</div>
+
+<script type="text/javascript">
+
+	(function($){
+
+		$(function(){
+
+			
+ __action('is_not_logged');
+
+ 
+ $('#current_table').html(__filter('get_table_name',__filter('session',['current_table'])));
+
+
+__action('load_menu_items');
+
+
+//order_summary
+ add_listener('order_item_updated',function(){
+
+  var summary = __action('order_summary');
+
+  $('#order-summary').html(summary.count + 'qtys @ =N= ' + __filter('currency',summary.total) );
+ 
+ });
+
+
+//trigger this action
+__action('order_item_updated');
+
+
+          add_listener('ajax_loading',function(){
+          	// $('#status').html('Loading...');
+
+          });
+
+          add_listener('ajax_done_loading',function(){
+
+          	// $('#status').html('Loading...');
+          	// __action('is_logged',[]);
+          });
+
+          add_listener('log_error',function(msg){
+
+          });
+
+
+          add_listener('log_success',function(msg){
+
+          });
+
+		});
+
+	})(jQuery);
+
+</script>
+</body>
+</html>

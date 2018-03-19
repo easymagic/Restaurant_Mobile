@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+<link rel="import" href="inc_header.html" />
+
+	<!-- <script type="text/javascript" src="js/libraries/jquery.js"></script> -->
+
+</head>
+<body>
+
+<style type="text/css">
+	.vspacing{
+		margin-bottom: 11px;
+	}
+</style>	
+
+
+
+
+<div class="col-xs-12" style="padding: 0;background-color: rgba(255,255,255,0.4);" align="center">
+	
+
+  <div>
+    <h3>
+      Order Checkout
+    </h3>
+  </div>
+
+  <div class="col-xs-12">
+    <label id="current_customer_name">
+    </label>
+  </div>
+
+
+  <div class="col-xs-12">
+    <label>
+      Total Qty. <span id="count"></span>
+    </label>
+  </div>
+
+
+  <div class="col-xs-12">
+    <label>
+      Total Amount. <span id="total"></span>
+    </label>
+  </div>
+
+
+  <div class="col-xs-12">
+    <label>
+      Select Payment Method
+    </label>
+  </div>
+
+
+  <div class="col-xs-12">
+    
+     <select id="payment_method" class="form-control">
+       <option value="cash">--select (Cash By Default)--</option>
+       <option value="cash">Cash</option>
+       <option value="card">Card</option>
+       <option value="both">Both/Split-Payments</option>
+     </select>
+
+  </div>
+
+
+<div class="col-xs-12" id="split" style="
+    padding: 0;
+    margin-top: 11px;
+    display: none;
+">
+  
+  <div class="col-xs-6">
+    <input type="number" id="pcash" placeholder="Cash Value" class="form-control" />
+  </div>
+  <div class="col-xs-6">
+    <input type="number" id="pcard" placeholder="Card Value" class="form-control">
+  </div>
+
+</div>
+
+<!--   <div class="col-xs-12">
+    <label>
+      Amount Tendered
+    </label>
+  </div>
+
+  <div class="col-xs-12">
+    <input placeholder="Amount Tendered" type="number" name="" id="amount-tendered" class="form-control" />
+  </div>
+ -->
+
+  <div class="col-xs-12 vspacing" style="margin-top: 11px;">
+    
+
+        <button id="checkout" class="btn btn-success form-control">
+         
+         <i class="fas fa-shopping-cart" style="float: left;"></i>
+
+        <span>
+        Check-Out
+        </span>
+
+      </button>
+
+
+  </div>
+
+
+
+	<div class="col-xs-12 vspacing" style="margin-top: 11px;">
+		
+
+        <a href="tables.html" class="btn btn-primary form-control">
+<i class="fas fa-chevron-circle-left" style="float: left;"></i>
+
+        Back</a>
+
+
+	</div>
+
+
+</div>
+
+<script type="text/javascript">
+	(function($){
+		$(function(){
+
+			
+ __action('is_not_logged');
+
+
+
+__action('init_crud_engine',{
+   entity:'orders', //items
+   salt:__filter('session',['current_table']) + '_' + __filter('session',['current_customer_salt'])
+});
+
+
+$('#current_customer_name').html(__filter('session',['current_customer_name']));
+
+var total = 0;
+var summary = __action('orders_summary',function(k,v,result){
+  total+=(+v.price);
+  result.total = total;
+});
+
+
+$('#count').html(summary.count);
+$('#total').html( __filter('currency',summary.total) );
+
+$('#pcash').val(summary.total);
+
+$('#pcash').on('keyup',function(){
+ calculate_other($(this),'#pcard');
+});
+
+$('#pcard').on('keyup',function(){
+ calculate_other($(this),'#pcash');
+});
+
+function calculate_other($ref,sel){
+  var vl = +($ref.val());
+  if (isNaN(vl)){
+    $ref.val(0);
+    $(sel).val(summary.total);
+  }else{
+    if (vl <= summary.total){
+     $(sel).val(summary.total - (+vl));
+    }else{
+     $ref.val(0);
+     $(sel).val(summary.total);     
+    }
+  }
+}
+
+
+// $('#current_table').html(__filter('get_table_name',__filter('session',['current_table'])));
+var checkout_data = {};
+var user_data = __action('session',['user_data']).admin_account;
+
+checkout_data.user_id = user_data.id;
+checkout_data.total_qty = summary.count;
+checkout_data.total_price = summary.total;
+checkout_data.customer_name = __filter('session',['current_customer_name']);
+
+$('#checkout').on('click',function(){
+  
+
+  checkout_data.payment_type = $('#payment_method').val();
+  checkout_data.card_split_value = $('#pcard').val();
+  checkout_data.cash_split_value = $('#pcash').val();
+  // checkout_data.amount_tendered = $('#amount-tendered').val();
+  checkout_data.status = 2; //pending
+  checkout_data.json_data = __action('orders_to_JSON');
+  checkout_data.table_id = __filter('session',['current_table']);
+
+  console.log(checkout_data);
+
+
+  __action('order_checkout',checkout_data);
+
+
+
+
+});
+
+
+$('#payment_method').on('change',function(){
+   var vl = $(this).val();
+   if (vl == 'both'){
+     $('#split').show();
+   }else{
+     $('#split').hide();
+   }
+});
+
+
+
+
+
+
+          add_listener('ajax_loading',function(){
+          	 $('#checkout').find('span').html('Loading...');
+          });
+
+          add_listener('ajax_done_loading',function(){
+          	$('#checkout').find('span').html('Check-Out');
+          	// __action('is_logged',[]);
+          });
+
+          add_listener('log_error',function(msg){
+
+          });
+
+
+          add_listener('log_success',function(msg){
+
+          });
+
+		});
+	})(jQuery);
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+<link rel="import" href="inc_header.html" />    
+
+
+	<!-- <script type="text/javascript" src="js/libraries/jquery.js"></script> -->
+
+</head>
+<body>
+
+<style type="text/css">
+	.vspacing{
+		margin-bottom: 11px;
+	}
+</style>	
+
+<div class="col-xs-12" style="padding: 0;">
+	
+	<div class="col-xs-12 vspacing r2-nav" align="center">
+	
+	  <label>Create Order (Select Table)</label>	
+   
+	</div>
+
+
+
+<div class="col-xs-12" align="center">
+  <img src="images/logo.jpg" style="
+    width: 128px;
+    border-radius: 50%;
+    margin-top: 30px;
+    margin-bottom: 5px;
+" />
+</div>
+
+  
+   <div class="col-xs-12">
+
+   	 <div class="alert alert-info" id="status" style="display: none;"></div>
+   
+   </div>
+
+
+<span id="outlet"></span>
+
+
+
+<div id="template" style="display: none;">
+
+<!-- template start   -->
+
+  <div class="col-xs-12 vspacing">
+
+
+        <button  class="btn btn-success form-control clk" data-id="sync-tables">
+
+<i class="fas fa-thumbtack" style="float: left;"></i>
+           <span>Table[]</span>
+
+        </button>
+
+
+  </div>
+
+
+<!-- template stop -->
+
+</div>
+	
+
+
+
+
+
+
+
+
+
+
+	<div class="col-xs-12 vspacing">
+		
+
+        <a href="dashboard.html" class="btn btn-default form-control" >
+         <i class="fas fa-chevron-circle-left" style="float: left;"></i>
+        Back</a>
+
+
+	</div>
+
+
+</div>
+
+<script type="text/javascript">
+	(function($){
+		$(function(){
+
+			
+ __action('is_not_logged');
+
+
+__action('init_crud_engine',{
+   entity:'tables', //items
+   salt:''
+});
+
+var waiter_table_id = __action('session',['waiter_table_id']);
+
+__action('tables_reload_list',{
+	template:'#template',
+	outlet:'#outlet',
+	cb:function($el,k,data){
+
+		if (data.parent_id == waiter_table_id){
+
+			  $el.find('button').find('span').html('(' + data.name + ')');
+			  $el.find('button').on('click',function(){
+			    
+			    __action('session',['current_table',data.id,'string']);
+			    __action('session',['current_table_name',data.name,'string']);
+			    // location.href = 'menu_list.html';
+			    location.href = 'customers.html';
+
+
+			  	console.log('Get items data ...');
+
+			  });
+
+	          return true;
+		}else{
+			return false;
+		}
+
+
+	}
+});
+
+
+
+
+// __action('load_table_order',$('#outlet'));
+
+		});
+	})(jQuery);
+</script>
+</body>
+</html>

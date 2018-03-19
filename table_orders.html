@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+  <link rel="import" href="inc_header.html" />
+
+
+	<!-- <script type="text/javascript" src="js/libraries/jquery.js"></script> -->
+
+</head>
+<body>
+
+<style type="text/css">
+	.vspacing{
+		margin-bottom: 11px;
+	}
+</style>	
+
+
+
+
+<div class="col-xs-12" style="padding: 0;">
+	
+	<div class="col-xs-12 vspacing" align="center">
+	
+   
+	</div>
+
+  
+   <div class="col-xs-12">
+
+   	 <div class="alert alert-info" id="status" style="display: none;"></div>
+   
+   </div>
+
+<div class="col-xs-12 r2-nav" style="position: fixed;margin-top: 0;z-index: 9000;background-color: rgba(0,0,0,0.2);padding: 11px;">
+
+    <label style="float: left;">Current Orders (<span id="current_table"></span>)</label> 
+
+        
+  <a href="menu_list.html" class="btn btn-primary" style="margin-left: 5px;">Back</a>
+  <a href="" class="btn btn-primary" style="" id="order-summary">Order</a>
+
+  <a href="" class="btn btn-warning" style="margin-right: 7px;" id="order-checkout-summary">Checkout</a>
+
+
+</div>
+
+<div style="clear: both;margin-top: 40px;">&nbsp;</div>
+
+
+<div class="col-xs-12 vspacing" id="outlet_orders"></div>
+
+<div class="col-xs-12" style="border-bottom: 2px solid #444;margin-bottom: 5px;">Check Out Section</div>
+
+<div class="col-xs-12" id="outlet_order_checkout"></div>
+
+<!-- template start -->
+<span id="template" style="display: none;">
+  
+  <div class="col-xs-12" style="
+    margin-top: 11px;
+">
+  
+    
+    <button id="add_to_checkout" class="btn btn-primary">+</button>
+
+    <span id="name"></span>
+
+    <button id="remove" class="btn btn-danger" style="float: right;"> - </button>
+
+  </div>
+
+</span>
+<!-- template stop -->
+
+
+<!-- template start -->
+<!-- template_order_checkout -->
+<span id="template_order_checkout" style="display: none;">
+  
+  <div class="col-xs-12" style="
+    margin-top: 11px;
+">
+  
+    
+    <!-- <button id="add_to_checkout" class="btn btn-primary">+</button> -->
+
+    <span id="name"></span>
+
+    <button id="remove" class="btn btn-danger" style="float: right;"> X </button>
+
+  </div>
+
+</span>
+
+<!-- template stop -->
+
+	<div class="col-xs-12 vspacing">
+		
+
+        <a href="menu_list.html" class="btn btn-primary form-control">Back</a>
+
+
+	</div>
+
+
+</div>
+
+<script type="text/javascript">
+	(function($){
+		$(function(){
+
+			
+ __action('is_not_logged');
+
+
+$('#current_table').html(__filter('get_table_name',__filter('session',['current_table'])));
+
+ __action('order_reload_list');
+
+
+ add_listener('order_item_updated',function(){
+
+  __action('order_reload_list');
+
+  var summary = __action('order_summary');
+
+  $('#order-summary').html(summary.count + 'qtys @ =N= ' + __filter('currency',summary.total) ); 
+ 
+ });
+
+
+ //order_checkout_item_updated
+add_listener('order_checkout_item_updated',function(){
+
+  __action('order_checkout_reload_list');
+
+  var summary = __action('order_checkout_summary');
+
+  if (summary.count <= 0){
+   $('#order-checkout-summary').hide();   
+  }else{
+   $('#order-checkout-summary').show(); 
+  }
+
+  $('#order-checkout-summary').html('Checkout with ' + summary.count + 'qtys @ =N= ' + __filter('currency',summary.total) ); 
+ 
+ });
+
+
+
+ __action('order_item_updated');
+
+ __action('order_checkout_item_updated');
+
+
+          add_listener('ajax_loading',function(){
+          	// $('#status').html('Loading...');
+
+          });
+
+          add_listener('ajax_done_loading',function(){
+          	// $('#status').html('Loading...');
+          	// __action('is_logged',[]);
+          });
+
+          add_listener('log_error',function(msg){
+
+          });
+
+
+          add_listener('log_success',function(msg){
+
+          });
+
+		});
+	})(jQuery);
+</script>
+</body>
+</html>

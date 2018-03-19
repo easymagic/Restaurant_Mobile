@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'MobileFamily';
+  src: url('fonts/Vollkorn-Bold.ttf')  format('truetype'); /* Safari, Android, iOS */
+       
+}
+
+
+body{
+	font-family: 'MobileFamily';
+	background-image: url(images/bg1.jpeg);background-position: center;
+}
+
+.r2-nav{
+   
+   white-space: nowrap;
+   overflow-x: scroll;
+   text-align: right;
+   background-color: rgba(255,255,255,0.4) !important;
+
+}
+
+.r2-nav *{
+ display: inline-block;
+ float: none;
+}

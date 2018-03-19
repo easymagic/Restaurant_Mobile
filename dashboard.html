@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+    <link rel="import" href="inc_header.html" />    
+
+
+	<!-- <script type="text/javascript" src="js/libraries/jquery.js"></script> -->
+
+</head>
+<body style="background-image: 'images/bg1.jpeg';">
+
+<style type="text/css">
+	.vspacing{
+		margin-bottom: 11px;
+	}
+</style>	
+
+<div class="col-xs-12" style="padding: 0;">
+	
+	<div class="col-xs-12 vspacing r2-nav" align="center">
+	
+	  <label>Welcome Waiter</label>	
+   
+	</div>
+
+
+<div class="col-xs-12" align="center">
+  <img src="images/logo.jpg" style="
+    width: 128px;
+    border-radius: 50%;
+    margin-top: 30px;
+    margin-bottom: 5px;
+" />
+</div>
+  
+   <div class="col-xs-12">
+
+   	 <div class="alert alert-info" id="status" style="display: none;"></div>
+   
+   </div>
+
+
+	<div class="col-xs-12 vspacing">
+
+
+        <button  class="btn btn-success form-control clk" data-id="sync-tables">
+          <i class="fas fa-sync-alt" style="float: left;"></i>
+          Sync Tables
+
+
+         <img src="images/loading.gif" id="status-loading" style="width: 16px;float: right;display: none;" />
+
+         <img src="images/ok.ico" id="status-done" style="width: 16px;float: right;display: none;" />
+
+        </button>
+
+
+	</div>
+
+
+	<div class="col-xs-12 vspacing">
+		
+
+        <button class="btn btn-success form-control clk" data-id="sync-menu-items">
+<i class="fas fa-sync-alt" style="float: left;"></i>
+          Sync Menu Items
+
+
+
+         <img src="images/loading.gif" id="status-loading" style="width: 16px;float: right;display: none;" />
+
+         <img src="images/ok.ico" id="status-done" style="width: 16px;float: right;display: none;" />
+
+
+
+        </button>
+
+
+	</div>
+
+
+	<div class="col-xs-12 vspacing">
+		
+
+        <a href="tables.html" class="btn btn-success form-control clk" data-id="create-order">
+
+          <i class="fas fa-plus" style="float: left;"></i>
+
+          Create Order
+
+        </a>
+
+
+	</div>
+
+
+	<div class="col-xs-12 vspacing">
+		
+
+     <button class="btn btn-success form-control clk" id="reset">
+      
+      <i class="fas fa-trash-alt" style="float: left;"></i>
+      Reset Device
+        </button>
+
+
+	</div>
+
+
+
+
+	<div class="col-xs-12 vspacing">
+		
+
+        <button  class="btn btn-danger form-control" id="log-out">
+      <i class="fas fa-sign-out-alt" style="float: left;"></i>
+
+
+        Log-Out</button>
+
+
+	</div>
+
+
+</div>
+
+<script type="text/javascript">
+	(function($){
+		$(function(){
+
+			
+ __action('is_not_logged');
+
+
+        $('#log-out').on('click',function(){
+        	__action('logout');
+        }); 
+
+        $('#reset').on('click',function(){
+        	if (confirm("Do You want to reset this device?")){
+        	  localStorage.clear();
+              alert("Device reset successfully.");
+              location.href = 'index.html';
+        	}
+        });
+
+        $('.clk').each(function(){
+           
+           var $el = $(this);
+           var $id = $(this).data('id');
+
+           $el.on('click',function(){
+
+           	__action('current_element',$el);
+
+           	if ($id == 'sync-tables'){
+
+           		__action('sync_tables','');
+
+           	}else if ($id == 'sync-menu-items'){
+
+           		__action('sync_items','');
+
+
+           	}else if ($id == 'create-order'){
+
+
+           	}else if ($id == 'waiter-assist'){
+
+
+           	}
+
+           });
+
+
+        });
+
+         
+
+          add_listener('ajax_loading',function(){
+          	// $('#status').html('Loading...');
+          	var $el = __action('current_element');
+          	$el.find('#status-loading').show();
+          	$el.find('#status-done').hide();
+
+          });
+
+          add_listener('ajax_done_loading',function(){
+          	var $el = __action('current_element');
+          	$el.find('#status-loading').hide();
+          	$el.find('#status-done').show();
+
+          	// $('#status').html('Loading...');
+          	// __action('is_logged',[]);
+          });
+
+          add_listener('log_error',function(msg){
+          	$('#status').html(msg);
+          	$('#status').show();
+          });
+
+
+          add_listener('log_success',function(msg){
+          	$('#status').html(msg);
+          	$('#status').show();
+          });
+
+		});
+	})(jQuery);
+</script>
+</body>
+</html>
