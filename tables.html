@@ -53,7 +53,7 @@
 
 <!-- template start   -->
 
-  <div class="col-xs-4 vspacing">
+  <div class="col-xs-6 vspacing">
 
 
         <button  class="btn btn-success form-control clk" data-id="sync-tables">
@@ -116,7 +116,7 @@ __action('tables_reload_list',{
 
 		if (data.parent_id == waiter_table_id){
 
-			  $el.find('button').find('span').html('(' + data.name + ')');
+			  $el.find('button').find('span').html(data.name);
 			  $el.find('button').on('click',function(){
 			    
 			    __action('session',['current_table',data.id,'string']);
