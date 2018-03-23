@@ -25,18 +25,16 @@
 	</div>
 
 
-<div class="col-xs-12 r2-nav" style="position: fixed;margin-top: 0;z-index: 9000;background-color: rgba(0,0,0,0.2);padding: 11px;">
+<div class="col-xs-12 r2-nav" style="position: fixed;margin-top: 0;z-index: 9000;background-color: rgba(0,0,0,0.2);padding: 11px;text-align: center;">
 
- <label style="float: left;">Orders / Select Customer  /<span id="current_customer"></span> / <span id="current_table"></span></label>
-    <!-- <label style="float: left;">Current Table (<span id="current_table"></span>)</label>  -->
 
   <a href="checkout.html" class="btn btn-warning" id="order-summary">Check-Out</a>
 
-  <a href="items.html" class="btn btn-primary" style="margin-left: 5px;">
+<!--   <a href="items.html" class="btn btn-primary" style="margin-left: 5px;">
 <i class="fas fa-chevron-circle-left"></i>
 &nbsp;
   Back</a>
-
+ -->
 </div>
 
 
@@ -47,6 +45,23 @@
    	 <div class="alert alert-info" id="status" style="display: none;"></div>
    
    </div>
+
+
+
+<div align="center" style="
+    background-color: #fff;
+    padding: 7px;
+    font-size: 20px;
+    margin-bottom: 7px;
+    margin-top: 22px;
+">
+    
+    <label>
+      <span id="current_table"></span> /
+      <span id="current_customer"></span>
+    </label>   
+
+</div>
 
 
 
@@ -168,8 +183,8 @@ __action('load_orders');
   });
 
   console.log(summary);
-
-  $('#order-summary').html('Check-Out with ' + summary.count + 'qtys @' + __filter('currency',summary.total) );
+// summary.count + 'qtys @'
+  $('#order-summary').html('Check-Out : ' + __filter('currency',summary.total) );
 
   __action('load_orders');
  

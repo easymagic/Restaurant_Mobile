@@ -30,25 +30,20 @@
 
 <div class="col-xs-12 r2-nav" style="position: fixed;margin-top: 0;z-index: 9000;background-color: rgba(0,0,0,0.2);padding: 11px;">
 
-    <label style="float: left;">Current Order / Select Customer  / <span id="current_table"></span></label> 
 
-  <button class="btn btn-primary" style="margin-left: 5px;" id="add"> 
+  <button class="btn btn-primary" style="margin-left: 5px;float: left;" id="add"> 
 
           <i class="fas fa-plus"></i>&nbsp;
 
    Customer</button>
         
-  <a href="tables.html" class="btn btn-primary" style="margin-left: 5px;">
-<i class="fas fa-chevron-circle-left"></i>
-&nbsp;
-  Back</a>
 
 
   <button id="pull-from-cloud"  class="btn btn-primary" style="margin-left: 5px;">
 <i class="fas fa-chevron-circle-left"></i>
 &nbsp;
 <span>
-  Pull From Cloud
+  Sync
 </span>
 </button>
 
@@ -59,6 +54,14 @@
 
 <div style="clear: both;margin-top: 62px;">&nbsp;</div>
 
+<div align="center" style="
+    background-color: #fff;
+    padding: 7px;
+    font-size: 20px;
+    margin-bottom: 7px;
+">
+    <label><span id="current_table"></span></label>   
+</div>
 
 <span id="outlet"></span>
 
@@ -150,11 +153,11 @@ add_listener('customers_list_updated',function(){
 
 
           add_listener('ajax_loading',function(){
-          	 $('#pull-from-cloud').find('span').html('Pulling From Cloud ... ');
+          	 $('#pull-from-cloud').find('span').html('Syncing...');
           });
 
           add_listener('ajax_done_loading',function(){
-          	$('#pull-from-cloud').find('span').html('Pull From Cloud');
+          	$('#pull-from-cloud').find('span').html('Sync');
           	// __action('is_logged',[]);
           });
 
