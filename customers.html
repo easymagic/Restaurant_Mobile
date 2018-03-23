@@ -125,7 +125,7 @@ __action('load_customer_list');
 
 $('#add').on('click',function(){
 	var name = prompt("Customer Name");
-	if (name != ''){
+	if (name){
 	  __action('customers_add',{name:name});
 	}
 });
