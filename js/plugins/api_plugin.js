@@ -6,7 +6,7 @@ add_listener('ajax_call',function(cfg){
    __action('ajax_loading');
 
    $.ajax({
-   	url:'http://r2soft.com.ng/restaurant/actions/api/' + cfg.api,
+   	url:'http://emberpos.com/actions/api/' + cfg.api,
    	type:'post',
    	data:cfg.data,
    	success:function(response){
