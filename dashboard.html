@@ -82,6 +82,27 @@
 	</div>
 
 
+  <div class="col-xs-12 vspacing">
+    
+
+        <button class="btn btn-success form-control clk" data-id="sync-settings">
+<i class="fas fa-sync-alt" style="float: left;"></i>
+          Sync Settings
+
+
+
+         <img src="images/loading.gif" id="status-loading" style="width: 16px;float: right;display: none;" />
+
+         <img src="images/ok.ico" id="status-done" style="width: 16px;float: right;display: none;" />
+
+
+
+        </button>
+
+
+  </div>
+
+
 	<div class="col-xs-12 vspacing">
 		
 
@@ -171,7 +192,11 @@
            	}else if ($id == 'waiter-assist'){
 
 
-           	}
+           	}else if ($id == 'sync-settings'){
+
+              __action('sync_settings','');
+ 
+            }
 
            });
 

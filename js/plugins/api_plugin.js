@@ -118,6 +118,21 @@ add_listener('sync_tables',function(cfg){
 
 });
 
+//sync/settings
+add_listener('sync_settings',function(cfg){
+  
+  __action('ajax_call',{
+    api:'sync/settings',
+    cb_success:function(response){
+      // if (response.error){
+         console.log(response.message);
+      // }
+       __action('save_settings',response);
+    }
+  });
+
+});
+
 
 
 

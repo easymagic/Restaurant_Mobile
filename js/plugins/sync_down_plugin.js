@@ -6,6 +6,19 @@ add_listener('save_tables',function(resp){
 });
 
 
+/////////////settings
+add_listener('save_settings',function(resp){
+
+ $.each(resp.data,function(k,v){
+
+   __action('session',[v.name,v.value,'string']);
+ 	
+ });
+
+
+});
+
+
 /////////////////items
 add_listener('save_items',function(resp){
 

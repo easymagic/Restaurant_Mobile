@@ -44,7 +44,35 @@
 
   <div class="col-xs-12">
     <label>
-      Total Amount. <span id="total"></span>
+      Total. <span id="total"></span>
+    </label>
+  </div>
+
+  <div class="col-xs-12">
+    <label>
+      V.A.T <span id="vat"></span>
+    </label>
+  </div>
+
+
+  <div class="col-xs-12">
+    <label>
+      Consumption TAX. <span id="consumption_tax"></span>
+    </label>
+  </div>
+
+
+  <div class="col-xs-12">
+    <label>
+      Service Charge. <span id="service_charge"></span>
+    </label>
+  </div>
+
+
+
+  <div class="col-xs-12">
+    <label>
+      Sub-Total. <span id="sub_total"></span>
     </label>
   </div>
 
@@ -143,12 +171,47 @@ __action('init_crud_engine',{
 
 $('#current_customer_name').html(__filter('session',['current_customer_name']));
 
+add_listener('compute_percentage',function(config){
+ var r = (+config.percentage)/100 * (+config.value);
+ return r;
+});
+
 var total = 0;
 var summary = __action('orders_summary',function(k,v,result){
   total+=(+v.price);
   result.total = total;
 });
 
+var vat = (+(__filter('session',['vat'])));
+var consumption_tax = (+(__filter('session',['consumption_tax'])));
+var service_charge = (+(__filter('session',['service_charge'])));
+
+var vat_value = __filter('compute_percentage',{
+  percentage:vat,
+  value:summary.total
+});
+
+var consumption_tax_value = __filter('compute_percentage',{
+  percentage:consumption_tax,
+  value:summary.total
+});
+
+
+var service_charge_value = __filter('compute_percentage',{
+  percentage:service_charge,
+  value:summary.total
+});
+
+var sub_total = summary.total + vat_value + consumption_tax_value + service_charge_value;
+
+
+$('#vat').html(__filter('currency',vat_value) + ' @ ' + vat + '%.');
+
+$('#consumption_tax').html(__filter('currency',consumption_tax_value) + ' @ ' + consumption_tax + '%');
+
+$('#service_charge').html(__filter('currency',service_charge_value) + ' @ ' + service_charge + '%');
+
+$('#sub_total').html(__filter('currency',sub_total));
 
 $('#count').html(summary.count);
 $('#total').html( __filter('currency',summary.total) );
@@ -167,13 +230,13 @@ function calculate_other($ref,sel){
   var vl = +($ref.val());
   if (isNaN(vl)){
     $ref.val(0);
-    $(sel).val(summary.total);
+    $(sel).val(sub_total);
   }else{
-    if (vl <= summary.total){
-     $(sel).val(summary.total - (+vl));
+    if (vl <= sub_total){
+     $(sel).val(sub_total - (+vl));
     }else{
      $ref.val(0);
-     $(sel).val(summary.total);     
+     $(sel).val(sub_total);     
     }
   }
 }
@@ -185,7 +248,7 @@ var user_data = __action('session',['user_data']).admin_account;
 
 checkout_data.user_id = user_data.id;
 checkout_data.total_qty = summary.count;
-checkout_data.total_price = summary.total;
+checkout_data.total_price = sub_total; // summary.total;
 checkout_data.customer_name = __filter('session',['current_customer_name']);
 
 $('#checkout').on('click',function(){
@@ -198,6 +261,7 @@ $('#checkout').on('click',function(){
   checkout_data.status = 2; //pending
   checkout_data.json_data = __action('orders_to_JSON');
   checkout_data.table_id = __filter('session',['current_table']);
+  // checkout_data.total_price = sub_total;
 
   console.log(checkout_data);
 
