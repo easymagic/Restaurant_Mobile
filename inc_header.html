@@ -3,6 +3,12 @@
  -->
 
   
+  <style type="text/css">
+  	body{
+  		/*display: none;*/
+        display: block;left: 100%;position: absolute;display: inline-block;width: 100%;  		
+  	}
+  </style>
 
     <link rel="stylesheet" type="text/css" href="font_awesome/fontawesome-all.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/mobile.css" />
@@ -42,4 +48,14 @@
 	<!-- <script type="text/javascript" src="js/plugins/item_plugin.js"></script> -->
     
 
+
+<script type="text/javascript">
+	(function($){
+		$(function(){
+			$('body').animate({
+             left:0
+			},'fast');
+		});
+	})(jQuery);
+</script>
 
