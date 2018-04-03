@@ -41,13 +41,13 @@
 
     <!-- Define app icon and splashscreen for each platform. -->
     <platform name="android">
-        <icon   src="www/icon/android/ic_launcher_1.png" density="ldpi" />
-        <icon   src="www/icon/android/ic_launcher_1_5.png" density="mdpi" />
-        <icon   src="www/icon/android/ic_launcher_2.png" density="hdpi" />
-        <icon   src="www/icon/android/ic_launcher_3.png" density="xhdpi" />
-        <icon   src="www/icon/android/ic_launcher_4.png" density="xxhdpi" />
+        <icon   src="icon/android/ic_launcher_1.png" density="ldpi" />
+        <icon   src="icon/android/ic_launcher_1_5.png" density="mdpi" />
+        <icon   src="icon/android/ic_launcher_2.png" density="hdpi" />
+        <icon   src="icon/android/ic_launcher_3.png" density="xhdpi" />
+        <icon   src="icon/android/ic_launcher_4.png" density="xxhdpi" />
     </platform>
-
+        
 
 
     <!--
