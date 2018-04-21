@@ -299,7 +299,7 @@ location.href = 'orders.html';
 });
 
 
-add_listener('clear_customer_table',function(cfg){
+add_listener('clear_customer_table',function(silent){
 
 var current_customer = __filter('session',['current_customer']);
 var current_table = __filter('session',['current_table']);
