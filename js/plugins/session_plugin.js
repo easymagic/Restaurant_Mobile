@@ -11,7 +11,12 @@ add_listener('session',function(cfg){ //k,v,type
       // console.log('called0');
 
       }else{
-       localStorage.setItem(cfg[0],cfg[1]);
+        if (cfg[1] == null){
+         localStorage.removeItem(cfg[0]);    
+        }else{
+         localStorage.setItem(cfg[0],cfg[1]);   
+        }
+       
       // console.log('called');
       }
 

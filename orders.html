@@ -28,8 +28,9 @@
 <div class="col-xs-12 r2-nav" style="position: fixed;margin-top: 0;z-index: 9000;background-color: rgba(0,0,0,0.2);padding: 11px;text-align: center;">
 
 
-  <a href="checkout.html" class="btn btn-warning" id="order-summary">Check-Out</a>
-
+  <!-- href="checkout.html" -->
+  <button class="btn btn-warning" id="order-summary">Check-Out</button>
+  <button type="button" class="btn btn-danger" id="order-clear">Clear</button>
 <!--   <a href="items.html" class="btn btn-primary" style="margin-left: 5px;">
 <i class="fas fa-chevron-circle-left"></i>
 &nbsp;
@@ -178,13 +179,24 @@ __action('load_orders');
  add_listener('orders_list_updated',function(){
   var total = 0;
   var summary = __action('orders_summary',function(k,v,result){
+
+   if (v.push_status == 'p'){
     total+=(+v.price);
-    result.total = total;
+   }
+
+   result.total = total;
+    
   });
+
+  if (summary.total <= 0){
+     $('#order-clear').show();
+  }else{
+     $('#order-clear').hide();
+  }   
 
   console.log(summary);
 // summary.count + 'qtys @'
-  $('#order-summary').html('Check-Out : ' + __filter('currency',summary.total) );
+  $('#order-summary').html('Push Order : ' + __filter('currency',summary.total) );
 
   __action('load_orders');
  
@@ -195,15 +207,161 @@ __action('load_orders');
 __action('orders_list_updated');
 
 
-          add_listener('ajax_loading',function(){
-          	// $('#status').html('Loading...');
+		});
 
+	})(jQuery);
+
+</script>
+
+
+<script type="text/javascript">
+(function($){
+  $(function(){
+
+
+// init start
+
+
+$('#current_customer_name').html(__filter('session',['current_customer_name']));
+
+add_listener('compute_percentage',function(config){
+ var r = (+config.percentage)/100 * (+config.value);
+ return r;
+});
+
+
+var order_clear_val = $('#order-clear').html();
+
+$('#order-clear').on('click',function(){
+  // var vl  = $(this).html();
+  $(this).html('Clearing ...');
+  (function($ref){
+   setTimeout(function(){
+     $ref.html(order_clear_val);
+   },1000);
+  })($(this));
+
+  __action('clear_customer_table',false);
+
+  // return false;
+});
+
+
+__action('clear_customer_table',true); //silent check.
+
+
+var checkout_data = {};
+
+$('#order-summary').on('click',function(){
+
+  $(this).html('Pushing ... ');
+
+// __action('init_crud_engine',{
+//    entity:'orders', //items
+//    salt:__filter('session',['current_table']) + '_' + __filter('session',['current_customer_salt'])
+// });
+
+var total = 0;
+var summary = __action('orders_summary',function(k,v,result){
+  
+
+     total+=(+v.price);
+  
+
+  result.total = total;
+});
+
+var vat = (+(__filter('session',['vat'])));
+var consumption_tax = (+(__filter('session',['consumption_tax'])));
+var service_charge = (+(__filter('session',['service_charge'])));
+
+var vat_value = __filter('compute_percentage',{
+  percentage:vat,
+  value:summary.total
+});
+
+var consumption_tax_value = __filter('compute_percentage',{
+  percentage:consumption_tax,
+  value:summary.total
+});
+
+
+var service_charge_value = __filter('compute_percentage',{
+  percentage:service_charge,
+  value:summary.total
+});
+
+var sub_total = summary.total + vat_value + consumption_tax_value + service_charge_value;
+
+var user_data = __action('session',['user_data']).admin_account;
+
+checkout_data.user_id = user_data.id;
+checkout_data.total_qty = summary.count;
+checkout_data.total_price = sub_total; // summary.total;
+checkout_data.customer_name = __filter('session',['current_customer_name']);
+
+  
+  // checkout_data.payment_type = $('#payment_method').val();
+  // checkout_data.card_split_value = $('#pcard').val();
+  // checkout_data.cash_split_value = $('#pcash').val();
+  // checkout_data.amount_tendered = $('#amount-tendered').val();
+  checkout_data.status = 2; //pending
+  checkout_data.json_data = __action('orders_to_JSON');
+  checkout_data.table_id = __filter('session',['current_table']);
+  // checkout_data.total_price = sub_total;
+
+  console.log(checkout_data);
+
+var current_customer = __filter('session',['current_customer']);
+var current_table = __filter('session',['current_table']);
+
+// __action('customers_remove',(+current_customer));
+// __action('orders_clear');
+var salt = current_customer + 'c_t' + current_table; 
+
+var order_id = __action('session',['order_id' + salt]);
+
+
+
+  // var order_id = __action('session',['order_id']);
+  if (order_id){
+   // delete checkout_data.status;
+   __action('order_update',checkout_data); 
+  }else{
+    // checkout_data.status = 2; //pending
+   __action('order_checkout',checkout_data);
+  }
+
+
+  
+
+
+
+
+});
+
+
+$('#payment_method').on('change',function(){
+   var vl = $(this).val();
+   if (vl == 'both'){
+     $('#split').show();
+   }else{
+     $('#split').hide();
+   }
+});
+
+
+
+
+
+
+          add_listener('ajax_loading',function(){
+             $('#checkout').find('span').html('Loading...');
           });
 
           add_listener('ajax_done_loading',function(){
-
-          	// $('#status').html('Loading...');
-          	// __action('is_logged',[]);
+            $('#checkout').find('span').html('Check-Out');
+            // __action('is_logged',[]);
           });
 
           add_listener('log_error',function(msg){
@@ -215,10 +373,16 @@ __action('orders_list_updated');
 
           });
 
-		});
 
-	})(jQuery);
+// init stop
 
+
+
+
+
+
+  });
+})(jQuery);  
 </script>
 </body>
 </html>

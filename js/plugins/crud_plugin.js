@@ -51,10 +51,15 @@ add_listener(cfg.entity + '_remove',function(index){
 
    var list = __filter('session',[cfg.entity + '_list_' + cfg.salt]);
 
+   list.reverse(); 
    
    var $item = list[index];
 
    list.splice(index,1);
+
+   list.reverse();
+
+   // console.log(list,index);
 
 
    __filter('session',[cfg.entity + '_list_' + cfg.salt,list,'object']);
@@ -65,6 +70,33 @@ add_listener(cfg.entity + '_remove',function(index){
    return $item;
  
 });
+
+
+add_listener(cfg.entity + '_map',function(cb){
+
+
+   __action(cfg.entity + '_init');   
+
+   var list = __filter('session',[cfg.entity + '_list_' + cfg.salt]);
+
+   $.each(list,function(k,v){
+      cb(list,k,v);
+   }); 
+   
+   // var $item = list[index];
+
+   // list.splice(index,1);
+
+
+   __filter('session',[cfg.entity + '_list_' + cfg.salt,list,'object']);
+
+   __action(cfg.entity + '_list_mapped',list);
+
+
+   // return $item;
+ 
+});
+
 
 
 
@@ -132,6 +164,8 @@ console.log('called init ... ');
 add_listener(cfg.entity + '_reload_list',function(cfg2){  
 
   var list = __filter(cfg.entity + '_all');
+
+  if (cfg2 && cfg2.reverse)list.reverse();
 
   var $el = $($(cfg2.template).html());
 

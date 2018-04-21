@@ -66,8 +66,10 @@ console.log('...loaded...');
 				      	$el_.find('#name').html(data_.name + '&nbsp;/&nbsp;=N= ' + data_.price);
 				        
 				        $el_.find('button').on('click',function(){
+				           data_.push_status = 'p';	 //p->pending,s->sent
 				        	// __action('order_add_item',data_); //call the add item hook here...
 				        	__action('orders_add',data_);
+				        	console.log(data_);
 				        });
 
 				        // cfg.el.append($el_sub);

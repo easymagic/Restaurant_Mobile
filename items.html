@@ -166,8 +166,13 @@ __action('load_menu_items');
     
     console.log(v);
 
+  if (v.push_status == 'p'){    
+
     total+=(+v.price);
     result.total = total;
+    
+   }
+    
   });
 
   console.log(summary);

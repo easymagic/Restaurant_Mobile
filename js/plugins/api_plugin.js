@@ -192,7 +192,7 @@ add_listener('order_create',function(){
 
 
 
-
+//order checkout
 add_listener('order_checkout',function(data){
   
   __action('ajax_call',{
@@ -201,12 +201,127 @@ add_listener('order_checkout',function(data){
   	cb_success:function(response){
   		//clear customer and customer items
 
-
+// var table_id = __action('session',['current_table']);
 
 // __action('init_crud_engine',{
-//    entity:'items', //items
-//    salt:''
-// });
+// entity:'customers',
+// salt:'_table_' + table_id
+// }); 
+
+
+__action('init_crud_engine',{
+   entity:'orders', //items
+   salt:__filter('session',['current_table']) + '_' + __filter('session',['current_customer'])
+});
+
+__action('orders_map',function(object,k,v){
+  
+   object[k].push_status = 's';
+
+});
+
+
+
+var current_customer = __filter('session',['current_customer']);
+var current_table = __filter('session',['current_table']);
+
+// __action('customers_remove',(+current_customer));
+// __action('orders_clear');
+var salt = current_customer + 'c_t' + current_table; 
+
+__action('session',['order_id' + salt,response.order_id,'string']);
+
+
+location.href = 'orders.html';
+
+
+
+  	}
+  });
+
+});
+
+
+
+
+//order update
+add_listener('order_update',function(data){
+
+var current_customer = __filter('session',['current_customer']);
+var current_table = __filter('session',['current_table']);
+
+// __action('customers_remove',(+current_customer));
+// __action('orders_clear');
+var salt = current_customer + 'c_t' + current_table; 
+
+var order_id = __action('session',['order_id' + salt]);
+
+  
+  // var order_id = __action('session',['order_id']);
+
+  __action('ajax_call',{
+    api:'table_order/update/' + order_id,
+    data:data,
+    cb_success:function(response){
+      //clear customer and customer items
+
+// var table_id = __action('session',['current_table']);
+
+// __action('init_crud_engine',{
+// entity:'customers',
+// salt:'_table_' + table_id
+// }); 
+
+
+__action('init_crud_engine',{
+   entity:'orders', //items
+   salt:__filter('session',['current_table']) + '_' + __filter('session',['current_customer'])
+});
+
+__action('orders_map',function(object,k,v){
+  
+   object[k].push_status = 's';
+
+});
+
+
+// var current_customer = __filter('session',['current_customer']);
+
+// __action('customers_remove',(+current_customer));
+// __action('orders_clear');
+
+location.href = 'orders.html';
+// location.href = 'tables.html';
+
+    }
+  });
+
+});
+
+
+add_listener('clear_customer_table',function(cfg){
+
+var current_customer = __filter('session',['current_customer']);
+var current_table = __filter('session',['current_table']);
+
+// __action('customers_remove',(+current_customer));
+// __action('orders_clear');
+var salt = current_customer + 'c_t' + current_table; 
+
+var order_id = __action('session',['order_id' + salt]);
+
+ if (!order_id)return;
+
+
+
+  __action('ajax_call',{
+    api:'order/status/' + order_id,
+    data:{},
+    cb_success:function(response){
+
+      var status = (response.status) * 1;
+
+      if (status < 2){
 
 var table_id = __action('session',['current_table']);
 
@@ -222,21 +337,42 @@ __action('init_crud_engine',{
 });
 
 
+
 var current_customer = __filter('session',['current_customer']);
 
-__action('customers_remove',(+current_customer));
-__action('orders_clear');
-location.href = 'tables.html';
+try{
+  __action('customers_remove',(+current_customer));
+  __action('orders_clear');
+}catch(e){
 
-  		// if (response.error){
-         console.log(response.message);
-  		// }
-       // __action('save_items',response);
-  	}
+}
+
+__action('session',['order_id' + salt,null,'null']);
+// location.href = 'tables.html';
+location.href = 'customers.html';
+
+      }else{
+        if (!silent)
+        alert('This order has not yet been verified or voided from the Office.');
+// location.href = 'customers.html';        
+      }
+
+
+
+
+
+
+    }
   });
 
-});
 
+
+
+
+
+
+
+});
 
 
 
